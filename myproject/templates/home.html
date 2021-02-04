@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Display Webcam Stream</title>
+ 
+<style>
+#container {
+	margin: 0px auto;
+	width: 400px;
+	/* height: 375px; */
+	border: 10px #333 solid;
+}
+#videoElement {
+	width: 500px;
+	height: 375px;
+	background-color: #666;
+}
+
+.button_capture  {
+    display: block; 
+    margin: 10px 0;
+    padding: 10px 20px; 
+    background-color: cornflowerblue;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+}
+
+#canvas {
+    display: none;
+}
+</style>
+</head>
+ 
+<body>
+
+
+
+
+    <form action="/external/" method="post">
+        {% csrf_token %}
+        Input Text:
+        <!-- <input type="file" name="param" required><br><br> -->
+        <img id="ph" name="ph" src="http://placekitten.com/g/200/300" alt="Photo of you">
+        <p id="demo" name="demo">Hello</p>
+        {{data_external}}<br><br>
+        {{data1}}
+        <br><br>
+        <input type="submit" value="Execute External Python Script">
+        </form>
+    <!-- ssss     
+    
+    
+    
+    
+    -->
+<div id="container">
+    <video id="video" width="400" height="300"></video> -->
+
+    <a href="#" id="capture" class="button_capture">Take Photo</a>
+    <canvas id="canvas" width="800" height="300"></canvas>
+    <div id="imgStyle" class="message">
+        <form action='/external/' method="post">
+            {% csrf_token %}
+            <img id="photo" name="photo" src="http://placekitten.com/g/200/300" alt="Photo of you">
+
+            <input type="submit" value="Execute Script"> 
+
+
+        </form>
+    </div>
+    <p id="demo" name="demo">Hello</p>
+
+
+</div>
+
+<script>
+
+
+// 'use strict'; 
+
+// const python = require('python-bridge'); 
+// const py = python(); 
+
+// const {
+//     ex, 
+//     end,
+// }= py; 
+
+// ex`from PIL import image`;
+
+// function fromPython(pycode = {}) {
+//   return JSON.stringify(pycode);
+// }
+
+// function toJavaScript(pystr = "") {
+//   return JSON.parse(pystr)
+// }
+
+// function fromPy(pycode = {}) {
+// }
+//   return toJavaScript(fromPython(pycode));
+
+
+// .... Maybe take pic using js and then send it to python? 
+
+(function() {
+    var video = document.getElementById('video'),
+        canvas = document.getElementById('canvas'),
+        context = canvas.getContext('2d'),
+        photo = document.getElementById('photo'), 
+        x = document.getElementById('video').currentSrc, 
+        vendorUrl = window.URL || window.webkitURL; 
+
+    navigator.getMedia = navigator.getUserMedia || 
+                         navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia ; 
+    
+    navigator.getMedia({
+        video: true, 
+        audio: false, 
+    }, function(stream) {
+        video.srcObject = stream; 
+        video.play(); 
+    }, function(error) {
+        // error.code 
+    });
+
+    document.getElementById('capture').addEventListener('click', function() {
+        // var link = document.createElement("a"); 
+        // link.download = "image.png";
+        photo.src = canvas.toDataURL('image/png'); 
+        context.drawImage(video, 0, 0, 400, 300); 
+        // var newEle = document.createElement("a"); 
+        // newEle = x; 
+        // document.body.appendChild(newEle); 
+        // document.write(newEle);
+        
+        // Make changes to image here 
+
+        // try {
+        //     let image = py`Image.open(${img}).rotate(90)`;
+            
+        // }
+        // catch (e) {
+        //     console.log(e);
+        // }
+        // python`im = Image.open(${img})` 
+        // python`im.rotate(90)`
+        // python`im.save('image.png')`
+        // python`return im` 
+
+        // photo.setAttribute('src', image);
+
+        // canvas.toBlob(function() {
+        //     link.href = URL.createObjectURL("images.png"); 
+        // }, 'image/png');
+        // link.click();
+        photo.setAttribute('src', canvas.toDataURL('image/png'));
+        document.getElementById('demo').innerHTML = canvas.toDataURL('image/png');   
+        canvas.save();
+    }); 
+})();
+
+// python.end();
+</script>
+
+</body>
+</html>
